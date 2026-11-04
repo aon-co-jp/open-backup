@@ -40,7 +40,7 @@ fn exe_path(cfg: &Config) -> Option<PathBuf> {
 }
 
 fn ping(base: &str) -> bool {
-    ureq::post(&format!("{base}/v1/classify"))
+    ureq::post(&format!("{base}/aruaru_llm.v1.Llm/Classify"))
         .timeout(Duration::from_secs(20))
         .send_json(serde_json::json!({"items":["ping"],"categories":["a","b"]}))
         .is_ok()
@@ -83,7 +83,7 @@ fn snippet(p: &Path) -> String {
 }
 
 fn classify(eng: &Engine, items: &[String]) -> Result<Vec<String>> {
-    let r: serde_json::Value = ureq::post(&format!("{}/v1/classify", eng.base))
+    let r: serde_json::Value = ureq::post(&format!("{}/aruaru_llm.v1.Llm/Classify", eng.base))
         .timeout(Duration::from_secs(120))
         .send_json(serde_json::json!({"items": items, "categories": TOPICS, "tenant": "open-backup"}))?
         .into_json()?;
