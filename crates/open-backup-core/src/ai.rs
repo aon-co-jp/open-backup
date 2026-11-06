@@ -130,3 +130,17 @@ pub fn fill(eng: &Engine, files: &[(String, PathBuf, String)], cache: &mut Cache
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    /// aruaru-llm の Connect 経路(Classify)への疎通。OPEN_BACKUP_TEST_LLM_URL が到達可能なときだけ実行する。
+    #[test]
+    fn classify_talks_to_connect_when_available() {
+        let Ok(base) = std::env::var("OPEN_BACKUP_TEST_LLM_URL") else { return };
+        if !ping(&base) { return; }
+        let eng = Engine { child: None, base };
+        let r = classify(&eng, &["notes.txt".to_string()]).expect("Classify が応答しない");
+        assert_eq!(r.len(), 1);
+    }
+}
